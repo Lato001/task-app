@@ -1,7 +1,12 @@
-import HomePage from "./Pages/HomePage";
+import { ThemeProvider } from "./context/ThemeContext";
+import Home from "./Pages/Home";
 
 function App() {
-  return <HomePage></HomePage>;
+  return (
+    <ThemeProvider>
+      <Home />
+    </ThemeProvider>
+  );
 }
 
 export default App;

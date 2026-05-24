@@ -42,7 +42,7 @@ La aplicacion se levanta en `http://localhost:5173` y recarga automaticamente co
 ### Colecciones
 
 ```mermaid
-DerDiagram
+erDiagram
     USUARIO {
         ObjectId _id
         string nombre
