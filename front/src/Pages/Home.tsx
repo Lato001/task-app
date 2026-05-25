@@ -1,56 +1,77 @@
-import TaskCard from "../Components/TaskCard";
+//import TaskForm from "../Components/TaskForm";
+import { MockTasks } from "../data/MockTasks";
+import type { Task } from "../Types/Task";
 import TaskColumn from "../Components/TaskColumn";
+import TaskCard from "../Components/TaskCard";
 import Header from "../Components/Header";
-import EmblaCarousel from "../Components/Carousel";
+import { useState } from "react";
+import Button from "../Components/Button";
 export default function Home() {
+  const initialTasks = MockTasks;
+  const [tasks, setTask] = useState<Task[]>(initialTasks);
+
+  const filteredTaskByStatus = (status: string) => {
+    const filteredTasks = tasks.filter((t) => t.status === status);
+    return filteredTasks;
+  };
+  const handleChangeStatus = (id: string, newStatus: Task["status"]) => {
+    setTask((prev) =>
+      prev.map((task) =>
+        task._id === id ? { ...task, status: newStatus } : task,
+      ),
+    );
+  };
+
   return (
-    <div className="min-h-screen bg-muted transition-colors">
-      <Header />
+    <>
+      {
+        //<TaskForm />;}
+      }
+      <Header title="Tasks App">
+        <Button text="Create Task"></Button>
+      </Header>
 
-      <main className="max-w-5xl mx-auto px-6 py-8">
-        <section className="mb-10">
-          <div className="flex items-center gap-2 mb-4">
-            <span className="w-1 h-5 rounded-full bg-accent" />
-            <h2 className="text-sm font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-              Todas las tareas
-            </h2>
-          </div>
-          <EmblaCarousel />
-        </section>
+      <section className="flex flex-col sm:flex-row gap-6">
+        <TaskColumn
+          title="Pending"
+          count={filteredTaskByStatus("pending").length}
+        >
+          {filteredTaskByStatus("pending").map((task) => (
+            <TaskCard
+              key={task._id}
+              title={task.header}
+              description={task.body}
+              status={task.status}
+            >
+              <Button
+                text="Change Status"
+                onClick={() => handleChangeStatus(task._id, "completed")}
+              ></Button>
+            </TaskCard>
+          ))}
+        </TaskColumn>
 
-        <section className="flex flex-col sm:flex-row gap-6">
-          <TaskColumn title="Pendientes" count={2}>
-            <TaskCard
-              title="Conectar backend"
-              description="Integrar API REST con Express"
-              status="pending"
-            />
-            <TaskCard
-              title="Autenticacion"
-              description="Login y registro de usuarios"
-              status="pending"
-            />
-          </TaskColumn>
-
-          <TaskColumn title="Completadas" count={3}>
-            <TaskCard
-              title="Configurar proyecto"
-              description="Inicializar Vite con React y Tailwind"
-              status="completed"
-            />
-            <TaskCard
-              title="Disenar tema"
-              description="Implementar modo claro y oscuro"
-              status="completed"
-            />
-            <TaskCard
-              title="Maquetar homepage"
-              description="Crear las 3 secciones principales"
-              status="completed"
-            />
-          </TaskColumn>
-        </section>
-      </main>
-    </div>
+        <TaskColumn
+          title="Completed"
+          count={filteredTaskByStatus("completed").length}
+        >
+          {filteredTaskByStatus("completed").map((task) => (
+            <div>
+              <TaskCard
+                key={task._id}
+                title={task.header}
+                description={task.body}
+                status={task.status}
+              >
+                <Button
+                  text="Change Status"
+                  onClick={() => handleChangeStatus(task._id, "pending")}
+                ></Button>
+              </TaskCard>
+            </div>
+          ))}
+        </TaskColumn>
+      </section>
+    </>
   );
 }
