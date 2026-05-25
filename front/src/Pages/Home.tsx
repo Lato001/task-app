@@ -6,9 +6,13 @@ import TaskCard from "../Components/TaskCard";
 import Header from "../Components/Header";
 import { useState } from "react";
 import Button from "../Components/Button";
+import Modal from "../Components/Modal";
+import TaskForm from "../Components/TaskForm";
 export default function Home() {
   const initialTasks = MockTasks;
+
   const [tasks, setTask] = useState<Task[]>(initialTasks);
+  const [isOpenTaskModal, setOpenTaskModal] = useState(false);
 
   const filteredTaskByStatus = (status: string) => {
     const filteredTasks = tasks.filter((t) => t.status === status);
@@ -28,7 +32,10 @@ export default function Home() {
         //<TaskForm />;}
       }
       <Header title="Tasks App">
-        <Button text="Create Task"></Button>
+        <Button
+          text="Create Task"
+          onClick={() => setOpenTaskModal(true)}
+        ></Button>
       </Header>
 
       <section className="flex flex-col sm:flex-row gap-6">
@@ -72,6 +79,9 @@ export default function Home() {
           ))}
         </TaskColumn>
       </section>
+      <Modal isOpen={isOpenTaskModal} onClose={() => setOpenTaskModal(false)}>
+        <TaskForm></TaskForm>
+      </Modal>
     </>
   );
 }
